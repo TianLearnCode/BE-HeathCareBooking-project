@@ -8,6 +8,7 @@ let configViewEngine = function(app){
     }))
     app.set('view engine', 'handlebars')//tương tự handle bar có thể ccode được logic trong file html
     app.set('views', './src/views')
+
 }
 
 export default configViewEngine;

@@ -1,4 +1,5 @@
 import db from '../models/index'
+import CRUDService from '../services/crudService';
 class HomeController{
     async index(req, res){
         try{
@@ -13,6 +14,15 @@ class HomeController{
         }catch(e){
             console.log(e)
         }
+    }
+
+    getCRUD(req, res){
+        return res.render('./test/crud.handlebars');
+    }
+    async postCRUD(req, res){
+        const message = await CRUDService.createNewUser(req.body);
+        console.log(message);
+        
     }
 }
 
