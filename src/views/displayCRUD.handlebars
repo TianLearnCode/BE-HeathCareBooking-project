@@ -1,0 +1,47 @@
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-11">
+            <h2>Get users</h2>
+            <a href="/crud" class="btn btn-outline-primary mb-3"><i class="fas fa-plus"></i> Add New User</a>            
+            <div class="table-responsive shadow-sm">
+                <table class="table table-info table-striped table-hover table-bordered">
+                    <thead class="table-dark">
+
+                        <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each dataTable}}
+
+                        <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.firstName}}</td>
+                        <td>{{this.lastName}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phoneNumber}}</td>
+                        <td>{{this.address}}</td>
+
+                        <td>{{this.roleId}}</td>
+                        <td style="min-width: 150px;"> 
+                            <a href="/edit-user/?id={{this.id}}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="/delete-user/?id={{this.id}}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                        
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

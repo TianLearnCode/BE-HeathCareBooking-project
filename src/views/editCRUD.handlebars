@@ -1,0 +1,134 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7"> <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4 text-primary">Cập nhật thông tin</h3>
+                    
+                    <form action="/post-edit" method="POST">
+                        {{#if userData}}
+                        <input type="text" name="id" value="{{userData.id}}" hidden>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label class="form-label">First Name</label>
+                                <div class="input-group">
+                                    <input type="text" name="firstName" class="form-control" value="{{userData.firstName}}" disabled>
+                                    <button class="btn btn-outline-secondary btn-edit" type="button">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </div>
+                                {{!-- <input type="text" name="firstName" class="form-control" value="{{userData.firstName}}" disabled> --}}
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Last Name</label>
+                                <div class="input-group">
+                                    <input type="text" name="lastName" class="form-control" value="{{userData.lastName}}" disabled>
+                                    <button class="btn btn-outline-secondary btn-edit" type="button">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email address</label>
+                            <div class="input-group">
+                                <input type="email" name="email" class="form-control" value="{{userData.email}}" readonly disabled>
+                                <button class="btn btn-outline-secondary btn-edit" type="button">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                            {{!-- <input type="email" name="email" class="form-control" value="{{userData.email}}" readonly disabled> --}}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <div class="input-group">
+                                <input type="text" name="address" class="form-control" value="{{userData.address}}" disabled>
+                                <button class="btn btn-outline-secondary btn-edit" type="button">
+                                    <i class="fas fa-pencil-alt"></i>   
+                                </button>
+                            </div>
+                            {{!-- <input type="text" name="address" class="form-control" value="{{userData.address}}" disabled> --}}
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <input type="text" name="phoneNumber" class="form-control" value="{{userData.phoneNumber}}" disabled>
+                                    <button class="btn btn-outline-secondary btn-edit" type="button">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender">
+                                    <option value="1">Male</option>
+                                    <option value="0">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Role</label>
+                                <select class="form-select" name="roleId">
+                                    <option value="0">Admin</option>
+                                    <option value="1">Doctor</option>
+                                    <option value="2">Patient</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
+                            <a href="/get-crud" class="btn btn-light">Quay lại</a>
+                        </div>
+                        {{/if}}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.btn-edit');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Tìm ô input nằm cùng hàng với nút
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('i');
+                
+                if (input) {
+                    // Kiểm tra nếu đang bị khóa thì mở, và ngược lại
+                    if (input.disabled) {
+                        // Trạng thái: MỞ KHÓA để sửa
+                        input.disabled = false;
+                        input.focus();
+                        
+                        // Đổi màu nút sang xanh lá và đổi icon thành dấu tích
+                        this.classList.replace('btn-outline-secondary', 'btn-success');
+                        icon.classList.replace('fa-pencil-alt', 'fa-check');
+                    } else {
+                        // Trạng thái: KHÓA LẠI (Hủy sửa)
+                        input.disabled = true;
+                        
+                        // Đổi màu nút về xám và đổi icon lại thành cây bút
+                        this.classList.replace('btn-success', 'btn-outline-secondary');
+                        icon.classList.replace('fa-check', 'fa-pencil-alt');
+                    }
+                }
+            });
+        });
+
+        // QUAN TRỌNG: Trước khi Submit, phải mở khóa tất cả để Backend nhận được data
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            const allInputs = this.querySelectorAll('input');
+            allInputs.forEach(input => {
+                input.disabled = false; 
+            });
+        });
+    });
+</script>
