@@ -1,4 +1,7 @@
+import { json } from 'body-parser';
 import userService from '../services/UserService';
+import handleUserLogin from '../services/userService';
+import getAllUsers from '../services/userService';
 class UserController {
     async handleLogin(req, res) {
         const email = req.body.email;
@@ -21,6 +24,29 @@ class UserController {
             message: userData.errMessage,
             user: userData.user ? userData.user :{}
         }) //api trả về dữ liệu dạng json, status 200 là thành công, nếu có lỗi sẽ trả về status 500
+
+        
+    }
+
+    async handleGetAllUsers(req, res){
+        let id = req.query.id;
+
+        if(!id){ //validate server site
+            return res.status(200).json({
+                errCode: 1,
+                message: 'Missing parameters',
+                users: []
+            })
+        }
+
+
+        let users = await userService.getAllUsers(id);
+        console.log(users)
+        return res.status(200).json({
+            errCode: 0,
+            message: 'Ok',
+            user: users
+        })
     }
 }
 export default new UserController();
