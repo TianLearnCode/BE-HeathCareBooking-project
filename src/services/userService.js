@@ -2,6 +2,9 @@ import e from 'express';
 import db from '../models/index';
 import bcrypt from 'bcryptjs';
 import { where } from 'sequelize';
+
+const salt = bcrypt.genSaltSync(10);
+
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject)=>{
         try{
@@ -97,8 +100,130 @@ let getAllUsers = (userId) =>{
     })
 }
 
+let hashUserPassword = (password) =>{
+    return new Promise(async(resolve, reject) =>{
+        try {
+            var hashPassword = await bcrypt.hashSync(password, salt);
+            resolve(hashPassword);
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+let createNewUser = (data) =>{
+    return new Promise(async(resolve, reject) =>{
+
+        try{
+
+            //check is existed email
+            let check = await checkUserEmail(data.email)
+            if(check === true){
+                resolve({
+                    errCode: 1,
+                    errMessage: 'This is email is exist, please use another emai l'
+                })
+            }
+            else{
+                let passwordHashed = await hashUserPassword(data.password)
+                await db.User.create({
+                    email: data.email,
+                    password: passwordHashed,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phoneNumber: data.phoneNumber,
+                    gender: data.gender === '1' ? true : false,
+                    roleId: data.roleId,
+                })
+                resolve({
+                    errCode: 0,
+                    message: 'OK'
+                })
+            }
+            
+
+            
+        }
+        catch(e){
+            reject(e)
+        }
+    })
+}
+let editUser = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                return resolve({
+                    errCode: 2,
+                    errMessage: 'Missing required parameter: id'
+                });
+            }
+
+            // Tìm user
+            let user = await db.User.findOne({
+                where: { id: data.id },
+                raw: false // BẮT BUỘC để dùng được hàm .save()
+            });
+
+            if (user) {
+                // GÁN LẠI GIÁ TRỊ (Dùng dấu =)
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.address = data.address;
+                user.phoneNumber = data.phoneNumber;
+                user.roleId = data.roleId;
+                user.gender = data.gender === '1' ? true : false;
+
+                // LƯU LẠI
+                await user.save();
+
+                resolve({
+                    errCode: 0,
+                    message: 'Update the user succeed!'
+                });
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: `User's not found!`
+                });
+            }
+        } catch (e) {
+            reject(e); // Phải có cái này để báo lỗi nếu DB có vấn đề
+        }
+    });
+}
+let deleteUser = (userId) =>{
+    return new Promise(async (resolve, reject) =>{
+        try{
+            let user = await db.User.findOne({
+            where: {id: userId}
+
+            })
+            if(!user){
+                resolve({
+                    errCode: 2,
+                    errMessage: 'User is not exist'
+                })
+            }
+            await db.User.destroy({
+                where: {id: userId}
+            })
+            resolve({
+                errCode: 0,
+                errMessage: 'The user is deleted'
+            })
+        }catch(e){
+            reject(e)
+        }
+    })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     checkUserEmail: checkUserEmail,
     getAllUsers: getAllUsers,
+    createNewUser: createNewUser,
+    hashUserPassword: hashUserPassword,
+    deleteUser: deleteUser,
+    editUser: editUser,
 }

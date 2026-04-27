@@ -2,6 +2,10 @@ import { json } from 'body-parser';
 import userService from '../services/UserService';
 import handleUserLogin from '../services/userService';
 import getAllUsers from '../services/userService';
+import createNewUser from '../services/userService'
+import editUser from '../services/userService'
+import deleteUser from '../services/userService'
+
 class UserController {
     async handleLogin(req, res) {
         const email = req.body.email;
@@ -47,6 +51,27 @@ class UserController {
             message: 'Ok',
             user: users
         })
+    }
+
+    async handleCreateNewUser(req, res){
+        let newUser = await userService.createNewUser(req.body);
+        return res.status(200).json(newUser)
+    }
+
+    async handleEditUser(req, res){
+        let data = req.body
+        let message =  await userService.editUser(data)
+        return res.status(200).json(message);
+    }
+    async handleDeleteUser(req, res){
+        if(!req.body.id){
+            return res.status(200).json({
+                errCode: 1,
+                errMessage: 'Missing required parameters'
+            })
+        }
+        let userDelete = await userService.deleteUser(req.body.id);
+        return res.status(200).json(userDelete);
     }
 }
 export default new UserController();
