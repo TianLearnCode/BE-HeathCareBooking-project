@@ -218,6 +218,32 @@ let deleteUser = (userId) =>{
         }
     })
 }
+
+let getAllCodesService =  (typeInput) =>{
+    return new Promise(async (resolve, reject) =>{
+        try{
+            if(!typeInput){
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing typeInput'
+                })
+            }else{
+                let response = {};
+                let allcode = await db.AllCode.findAll({
+                    where: {type: typeInput}
+                });
+                response.errCode = 0;
+                response.data = allcode;
+                console.log(allcode)
+                resolve(response) 
+            }
+            
+        }
+        catch(e){
+            reject(e)
+        }
+    })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     checkUserEmail: checkUserEmail,
@@ -226,4 +252,5 @@ module.exports = {
     hashUserPassword: hashUserPassword,
     deleteUser: deleteUser,
     editUser: editUser,
+    getAllCodesService: getAllCodesService,
 }

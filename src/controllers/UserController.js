@@ -5,6 +5,7 @@ import getAllUsers from '../services/userService';
 import createNewUser from '../services/userService'
 import editUser from '../services/userService'
 import deleteUser from '../services/userService'
+import getAllCodesService from '../services/userService'
 
 class UserController {
     async handleLogin(req, res) {
@@ -73,5 +74,20 @@ class UserController {
         let userDelete = await userService.deleteUser(req.body.id);
         return res.status(200).json(userDelete);
     }
+
+    async getAllCodes(req, res){
+        try{
+            let data = await userService.getAllCodesService(req.query.type)
+            return res.status(200).json(data)
+        }   
+        catch(e){
+            console.log('Get all code', e)
+            return res.status(200).json({
+                errCode: -1,
+                errMessage: 'Error from server'
+            })
+        }
+    }
+
 }
 export default new UserController();
