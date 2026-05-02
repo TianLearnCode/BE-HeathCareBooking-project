@@ -16,7 +16,7 @@ let handleUserLogin = (email, password) => {
                 // bcrypt.compareSync("not_bacon", hash); // false
  
                 let user = await db.User.findOne({
-                    attributes:['email', 'roleId', 'password'],
+                    attributes:['email', 'roleId', 'password', 'firstName', 'lastName'],
 
                     where: {email: email},
                     raw: true
