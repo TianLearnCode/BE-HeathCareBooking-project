@@ -133,8 +133,9 @@ let createNewUser = (data) =>{
                     lastName: data.lastName,
                     address: data.address,
                     phoneNumber: data.phoneNumber,
-                    gender: data.gender === '1' ? true : false,
+                    gender: data.gender,
                     roleId: data.roleId,
+                    positionId: data.positionId
                 })
                 resolve({
                     errCode: 0,
@@ -173,7 +174,7 @@ let editUser = (data) => {
                 user.address = data.address;
                 user.phoneNumber = data.phoneNumber;
                 user.roleId = data.roleId;
-                user.gender = data.gender === '1' ? true : false;
+                user.gender = data.gender;
 
                 // LƯU LẠI
                 await user.save();

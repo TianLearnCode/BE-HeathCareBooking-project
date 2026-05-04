@@ -50,7 +50,7 @@ class UserController {
         return res.status(200).json({
             errCode: 0,
             message: 'Ok',
-            user: users
+            users: users
         })
     }
 
