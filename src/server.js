@@ -10,8 +10,13 @@ const app = express();
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 //cấu hình app
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
+
+//cấu hình dung lượng 413 (Payload Too Large)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 viewEngine(app);
 route(app);
 
