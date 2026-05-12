@@ -22,7 +22,7 @@ const initWebRoutes = (app) => {
     router.get('/api/allcodes', userController.getAllCodes);
 
     router.get('/api/top-doctor-home', doctorController.getTopDoctorHome);
-
+    router.get('/api/get-all-doctors', doctorController.getAllDoctors)
     return app.use('/', router);
 }
 export default initWebRoutes;
