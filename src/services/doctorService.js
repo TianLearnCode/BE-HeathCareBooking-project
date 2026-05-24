@@ -1,3 +1,4 @@
+import { raw } from 'body-parser'
 import db from '../models/index'
 let getTopDoctorHome = (limitInput) =>{//lấy limit
     return new Promise(async(resolve, reject)=>{
@@ -73,8 +74,45 @@ let saveDetailInforDoctor = (inputData) => {
         }
    })
 }
+
+let getDetailDoctorById = (doctorId) => {
+        return new Promise(async (resolve, reject) => {
+            try{
+                if(!doctorId){
+                    resolve({
+                        errCode: 1,
+                        errMessage: 'Missing required parameters'
+                    })
+                }
+                else{
+                    let data = await db.User.findOne({
+                        where: {id: doctorId},
+                        attributes:{
+                            exclude: ['password', 'image']
+                        },
+                        include:[
+                            {model: db.MarkDown}
+                        ],
+                        raw: true,
+                        nest: true
+                    })
+                    resolve({
+                        errCode: 0,
+                        errMessage: 'Get detail doctor success',
+                        data: data
+                    })
+                }
+            }catch(e){
+                reject(e)
+            }
+        
+    }
+)
+}
+
 module.exports = {
-    getTopDoctorHome:getTopDoctorHome,
+    getTopDoctorHome: getTopDoctorHome,
     getAllDoctors: getAllDoctors,
-    saveDetailInforDoctor: saveDetailInforDoctor
+    saveDetailInforDoctor: saveDetailInforDoctor,
+    getDetailDoctorById: getDetailDoctorById
 }
