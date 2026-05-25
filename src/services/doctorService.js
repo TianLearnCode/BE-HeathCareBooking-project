@@ -88,10 +88,16 @@ let getDetailDoctorById = (doctorId) => {
                     let data = await db.User.findOne({
                         where: {id: doctorId},
                         attributes:{
-                            exclude: ['password', 'image']
+                            exclude: ['password']
                         },
                         include:[
-                            {model: db.MarkDown}
+                            {
+                                model: db.MarkDown,
+                                attributes: ['contentHTML', 'contentMarkdown', 'description']
+                            },
+                            {
+                                model: db.AllCode, as:'positionData', attributes:['valueEn', 'valueVi']
+                            }
                         ],
                         raw: true,
                         nest: true
